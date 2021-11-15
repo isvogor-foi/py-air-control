@@ -95,13 +95,13 @@ class CoAPCliBase(CliBase):
 
 
 class CoAPCli(CoAPCliBase):
-    def __init__(self, host, port=5683, debug=False):
-        super().__init__(CoAPAirClient(host, port, debug))
+    def __init__(self, host, port=5683, debug=False, timeout=30):
+        super().__init__(CoAPAirClient(host, port, debug,timeout=timeout))
 
 
 class PlainCoAPAirCli(CoAPCliBase):
-    def __init__(self, host, port=5683):
-        super().__init__(PlainCoAPAirClient(host, port))
+    def __init__(self, host, port=5683, timeout=30):
+        super().__init__(PlainCoAPAirClient(host, port, timeout=timeout))
 
 
 class HTTPAirCli(CliBase):
@@ -178,6 +178,7 @@ def main():
     parser.add_argument("--wifi-pwd", help="set wifi password")
     parser.add_argument("--firmware", help="read firmware", action="store_true")
     parser.add_argument("--filters", help="read filters status", action="store_true")
+    parser.add_argument("--timeout", help="CoAP default timeout", default="30")
     args = parser.parse_args()
 
     if args.ipaddr:
@@ -200,9 +201,9 @@ def main():
         if args.protocol == "http":
             c = HTTPAirCli(device["ip"])
         elif args.protocol == "plain_coap":
-            c = PlainCoAPAirCli(device["ip"])
+            c = PlainCoAPAirCli(device["ip"], timeout=args.timeout)
         elif args.protocol == "coap":
-            c = CoAPCli(device["ip"], debug=args.debug)
+            c = CoAPCli(device["ip"], debug=args.debug, timeout=args.timeout)
 
         if args.wifi:
             c.get_wifi()
