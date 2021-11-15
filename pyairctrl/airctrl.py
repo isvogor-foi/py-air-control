@@ -96,7 +96,7 @@ class CoAPCliBase(CliBase):
 
 class CoAPCli(CoAPCliBase):
     def __init__(self, host, port=5683, debug=False, timeout=30):
-        super().__init__(CoAPAirClient(host, port, debug,timeout=timeout))
+        super().__init__(CoAPAirClient(host, port, debug, timeout=timeout))
 
 
 class PlainCoAPAirCli(CoAPCliBase):
@@ -201,9 +201,9 @@ def main():
         if args.protocol == "http":
             c = HTTPAirCli(device["ip"])
         elif args.protocol == "plain_coap":
-            c = PlainCoAPAirCli(device["ip"], timeout=args.timeout)
+            c = PlainCoAPAirCli(device["ip"], timeout=float(args.timeout))
         elif args.protocol == "coap":
-            c = CoAPCli(device["ip"], debug=args.debug, timeout=args.timeout)
+            c = CoAPCli(device["ip"], debug=args.debug, timeout=float(args.timeout))
 
         if args.wifi:
             c.get_wifi()
